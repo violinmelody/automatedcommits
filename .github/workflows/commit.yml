@@ -48,7 +48,7 @@ jobs:
           echo "$PASSPHRASE" | gpg --batch --yes --pinentry-mode loopback --passphrase-fd 0 --sign commit.txt
           git commit -S -m "Signed commit on $(date)"
 
-          git remote set-url origin https://x-access-token:${{ secrets.git_pony }}@github.com/${{ github.repository }}.git
+          git remote set-url origin https://x-access-token:${{ secrets.GIT_PONY_PAT }}@github.com/${{ github.repository }}.git
           git push --quiet
           unset PASSPHRASE
 
