@@ -1,8 +1,8 @@
-![POC Github Workflow](https://img.shields.io/badge/POC-Github%20Workflow-8A2BE2) ![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)
+![POC Github Workflow](https://img.shields.io/badge/POC-Github%20Workflow-8A2BE2) ![MIT License](https://img.shields.io/badge/license-MIT-blue.svg) ![Suppot](https://img.shields.io/badge/Buy%20me%20a%20coffee-%23EFEFEF?logo=kofi&logoColor=%23FF6433&link=https%3A%2F%2Fko-fi.com%2Fviolinmelody%2F)
 
 # [POC] Updating Github Contribution Activity Calendar with Automated Github Actions
 
-This repository is a proof of concept of self-hosted automated daily signed commits to GitHub using a GPG key. Commits pushed like this are seen by Github as verified and pollute Github Activity history therefore show in Calendar. Only GitHub Actions are used so there is no need to run anything locally.
+This repository is a **Proof of Concept** of self-hosted automated daily signed commits to GitHub using a GPG key. Commits pushed like this are seen by Github as verified and pollute Github Activity history therefore show in Calendar. Only GitHub Actions are used so there is no need to run anything locally.
 
 ![Image showing signed commit](images/example_01.jpg)
 ![Image showing activity calendar](images/example_02.jpg)
