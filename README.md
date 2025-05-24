@@ -1,4 +1,5 @@
-![POC Github Workflow](https://img.shields.io/badge/POC-Github%20Workflow-8A2BE2) ![MIT License](https://img.shields.io/badge/license-MIT-blue.svg) ![Suppot](https://img.shields.io/badge/Buy%20me%20a%20coffee-%23EFEFEF?logo=kofi&logoColor=%23FF6433&link=https%3A%2F%2Fko-fi.com%2Fviolinmelody%2F)
+![POC Github Workflow](https://img.shields.io/badge/POC-Github%20Workflow-8A2BE2) ![MIT License](https://img.shields.io/badge/license-MIT-blue.svg) [![Buy Me a Coffee](https://img.shields.io/badge/Buy%20me%20a%20coffee-%23EFEFEF?logo=kofi&logoColor=%23FF6433)](https://ko-fi.com/violinmelody)
+
 
 # [POC] Updating Github Contribution Activity Calendar with Automated Github Actions
 
