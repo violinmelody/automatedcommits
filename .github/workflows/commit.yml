@@ -1,0 +1,74 @@
+name: Automated Signed Daily Commit
+
+on:
+  #schedule:
+    #- cron: '0 0 * * *'  # Runs daily at midnight UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  signed-commit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Import GPG key
+        run: |
+          echo "${{ secrets.GPG_PRIVATE_KEY }}" | gpg --batch --import
+          GPG_FINGERPRINT=$(gpg --list-secret-keys --with-colons | awk -F: '/^fpr:/ {print $10; exit}')
+          echo "GPG_FINGERPRINT=$GPG_FINGERPRINT" >> $GITHUB_ENV
+
+      - name: Trust GPG key
+        run: |
+          echo -e "5\ny\n" | gpg --batch --yes --command-fd 0 --edit-key "$GPG_FINGERPRINT" trust
+
+      - name: Configure Git with GPG signing
+        run: |
+          git config --global user.name "${{ secrets.GIT_USER_NAME }}"
+          git config --global user.email "${{ secrets.GIT_USER_EMAIL }}"
+          git config --global commit.gpgsign true
+          git config --global user.signingkey "$GPG_FINGERPRINT"
+          git config --global gpg.program gpg
+          git config --global gpg.options "--pinentry-mode loopback --no-tty"
+          git config --global core.sshCommand "ssh -T git@github.com"
+
+      - name: Commit with Verified Signature
+        env:
+          GPG_TTY: /dev/null
+          PASSPHRASE: "${{ secrets.GPG_PASSPHRASE }}"
+        run: |
+          echo "::add-mask::$PASSPHRASE"
+          echo "Signed commit on $(date)" > commit.txt
+          git add commit.txt
+
+          echo "$PASSPHRASE" | gpg --batch --yes --pinentry-mode loopback --passphrase-fd 0 --sign commit.txt
+          git commit -S -m "Signed commit on $(date)"
+
+          git remote set-url origin https://x-access-token:${{ secrets.git_pony }}@github.com/${{ github.repository }}.git
+          git push --quiet
+          unset PASSPHRASE
+
+      #- name: Debug GPG keys before cleanup
+      #  if: always()
+      #  run: |
+      #    echo "Listing GPG secret and public keys:"
+      #    gpg --list-secret-keys --keyid-format LONG
+      #    gpg --list-keys --keyid-format LONG
+
+      - name: Force cleanup GPG keys
+        if: always()
+        run: |
+          if [[ -n "$GPG_FINGERPRINT" ]]; then
+            echo "Killing GPG agent..."
+            gpgconf --kill gpg-agent
+
+            echo "Attempting to delete secret key..."
+            gpg --batch --yes --delete-secret-keys "$GPG_FINGERPRINT" || true
+
+            echo "Attempting to delete public key..."
+            gpg --batch --yes --delete-keys "$GPG_FINGERPRINT" || true
+          fi
